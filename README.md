@@ -49,6 +49,16 @@ graph TD
 - **Anonymous Community**: Safe space for sharing and support
 - **Web3 Integration**: Utilizing blockchain for data sovereignty
 
+## Market Cap
+
+- **Rapidly expanding niche**: The global menstrual‑health‑apps market is valued at US $1.75 billion in 2024 and is projected to reach US $10.38 billion by 2034, a stunning 19.5 % CAGR (Precedence Research). 
+
+
+- **Mass adoption, unmet needs**: More than 50 million people already track their cycles with an app, yet woman say mainstream tools are too clinical, ad‑heavy, or privacy‑risky. 
+
+- **Part of a booming FemTech wave**: Women's‑health tech overall will top US $60 billion in 2025 and nearly double to ~US $130 billion by 2034, signalling strong investor interest and exit potential. 
+
+
 ## Breakthrough Features
 
 CycleBuddy's three breakthrough features that set it apart from any other health application:
