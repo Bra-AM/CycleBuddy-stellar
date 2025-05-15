@@ -182,13 +182,6 @@ const advancedFeatures = [
 // Add this in the advancedFeatures array after the existing items
 const breakthroughFeatures = [
   {
-    title: 'AI-Powered Health Insights',
-    description: 'Get personalized health insights from advanced machine learning algorithms that analyze your encrypted data while maintaining privacy.',
-    emoji: '🧠',
-    tabValue: 'ai-health-insights',
-    color: 'purple',
-  },
-  {
     title: 'NFT-Based Educational Achievement',
     description: 'Earn verified NFT credentials by completing educational modules on menstrual and reproductive health.',
     emoji: '🎓',
@@ -196,12 +189,19 @@ const breakthroughFeatures = [
     color: 'teal',
   },
   {
+    title: 'AI-Powered Health Insights',
+    description: 'Get personalized health insights from advanced machine learning algorithms that analyze your encrypted data while maintaining privacy.',
+    emoji: '🧠',
+    tabValue: 'ai-health-insights',
+    color: 'purple',
+  },
+  /* {
     title: 'Research Contribution Marketplace',
     description: 'Contribute anonymized health data to research projects of your choice and receive fair compensation.',
     emoji: '🔬',
     tabValue: 'research-marketplace',
     color: 'blue',
-  },
+  }, */
 ];
 
 export const DashboardPage = () => {
@@ -1052,7 +1052,7 @@ export const DashboardPage = () => {
             <Icon as={FaGraduationCap} mr={2} />
             NFT Education
           </Button>
-          <Button
+          {/* <Button
             variant="ghost"
             px={4}
             py={3}
@@ -1067,7 +1067,7 @@ export const DashboardPage = () => {
           >
             <Icon as={FaFlask} mr={2} />
             Research Marketplace
-          </Button>
+          </Button> */}
         </HStack>
       </Box>
 
@@ -1173,48 +1173,8 @@ export const DashboardPage = () => {
           </Card>
         </GridItem>
       </Grid>
-
-      {/* Advanced Stellar Features (now after the cycle data cards) */}
-      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8} mb={10}>
-        {advancedFeatures.map((feature, index) => (
-          <Card 
-            key={index} 
-            borderRadius="lg" 
-            boxShadow="md" 
-            height="100%" 
-            _hover={{ transform: 'translateY(-5px)', transition: 'transform 0.3s' }}
-          >
-            <CardHeader>
-              <HStack>
-                <Box
-                  bg="#8A2BE220"
-                  p={2}
-                  borderRadius="full"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  fontSize="xl"
-                >
-                  {feature.emoji}
-                </Box>
-                <Heading size="md">{feature.title}</Heading>
-              </HStack>
-            </CardHeader>
-            <CardBody pt={0}>
-              <Text mb={4}>{feature.description}</Text>
-              <Button 
-                size="sm" 
-                onClick={() => openFeatureModal(feature)}
-                sx={animatedGradientStyle}
-              >
-                Explore
-              </Button>
-            </CardBody>
-          </Card>
-        ))}
-      </SimpleGrid>
       
-      <Box mb={10}>
+      {/* <Box mb={10}>
         <Heading as="h2" size="lg" mb={4} bgGradient={cardGradient} bgClip="text">
           Secured by Stellar Blockchain
         </Heading>
@@ -1253,9 +1213,9 @@ export const DashboardPage = () => {
             </Card>
           ))}
         </SimpleGrid>
-      </Box>
+      </Box> */}
 
-      <Heading as="h2" size="lg" mb={4} bgGradient={cardGradient} bgClip="text">
+      {/* <Heading as="h2" size="lg" mb={4} bgGradient={cardGradient} bgClip="text">
         Resources & Information
       </Heading>
       <Grid templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }} gap={6}>
@@ -1289,9 +1249,9 @@ export const DashboardPage = () => {
             </Card>
           </GridItem>
         ))}
-      </Grid>
+      </Grid> */}
 
-      <Box mt={16} p={6} borderRadius="lg" bg="gray.50" boxShadow="sm">
+      {/* <Box mt={16} p={6} borderRadius="lg" bg="gray.50" boxShadow="sm">
         <Heading as="h3" size="md" mb={4} textAlign="center">
           Your Data Security
         </Heading>
@@ -1307,7 +1267,7 @@ export const DashboardPage = () => {
             ✓ Only you have access to your personal information
           </ListItem>
         </List>
-      </Box>
+      </Box> */}
       
       {/* Feature Modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
@@ -1324,7 +1284,7 @@ export const DashboardPage = () => {
           Explore our innovative features that leverage the full power of Web3 and the Stellar blockchain to transform menstrual health tracking.
         </Text>
         
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
           {breakthroughFeatures.map((feature, index) => (
             <Card 
               key={index} 
@@ -1796,6 +1756,47 @@ export const DashboardPage = () => {
         </Box>
       )}
 
+
+      {/* Advanced Stellar Features (now after the cycle data cards) */}
+      <SimpleGrid columns={{ base: 1, md: 6 }} spacing={8} mb={10}>
+        {advancedFeatures.map((feature, index) => (
+          <Card 
+            key={index} 
+            borderRadius="lg" 
+            boxShadow="md" 
+            height="100%" 
+            _hover={{ transform: 'translateY(-5px)', transition: 'transform 0.3s' }}
+          >
+            <CardHeader>
+              <VStack spacing={3} align="center">
+                <Box
+                  bg="#8A2BE220"
+                  p={3}
+                  borderRadius="full"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  fontSize="2xl"
+                >
+                  {feature.emoji}
+                </Box>
+                <Heading size="md" textAlign="center">{feature.title}</Heading>
+              </VStack>
+            </CardHeader>
+            <CardBody pt={0} display="flex" justifyContent="center">
+{/*               <Text mb={4}>{feature.description}</Text>
+ */}              <Button 
+                size="sm" 
+                onClick={() => openFeatureModal(feature)}
+                sx={animatedGradientStyle}
+              >
+                Explore
+              </Button>
+            </CardBody>
+          </Card>
+        ))}
+      </SimpleGrid>
+      
       {/* Feature Modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
@@ -1807,4 +1808,4 @@ export const DashboardPage = () => {
   );
 };
 
-export default DashboardPage; 
+export default DashboardPage;

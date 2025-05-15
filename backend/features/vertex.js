@@ -19,13 +19,34 @@ try {
     console.log(`Using credentials from: ${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
     vertexAI = new VertexAI({project: project, location: location});
   } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON) {
-    // Using credentials JSON content from environment variable
-    const credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
-    vertexAI = new VertexAI({
-      project: project, 
-      location: location,
-      credentials: credentials
-    });
+    // Try to parse as JSON string first
+    try {
+      const credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+      vertexAI = new VertexAI({
+        project: project, 
+        location: location,
+        credentials: credentials
+      });
+      console.log('Using credentials from environment variable JSON content');
+    } catch (jsonError) {
+      // If parsing fails, try to read it as a file path
+      const fs = require('fs');
+      try {
+        const filePath = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
+        console.log(`Trying to read credentials from file: ${filePath}`);
+        const fileContent = fs.readFileSync(filePath, 'utf8');
+        const credentials = JSON.parse(fileContent);
+        vertexAI = new VertexAI({
+          project: project,
+          location: location,
+          credentials: credentials
+        });
+        console.log('Using credentials from file referenced in GOOGLE_APPLICATION_CREDENTIALS_JSON');
+      } catch (fileError) {
+        console.error('Error reading credentials file:', fileError.message);
+        throw new Error(`Could not parse JSON or read credential file: ${jsonError.message}, ${fileError.message}`);
+      }
+    }
   } else {
     // Default authentication - will use ADC (Application Default Credentials)
     // Useful when running on Google Cloud or using gcloud CLI authentication
@@ -34,7 +55,7 @@ try {
   }
 } catch (error) {
   console.error('Error initializing Vertex AI:', error);
-  throw new Error('Failed to initialize Google Cloud authentication');
+  throw new Error(`Failed to initialize Google Cloud authentication: ${error.message}`);
 }
 
 const generativeModel = vertexAI.getGenerativeModel({

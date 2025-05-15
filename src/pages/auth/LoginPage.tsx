@@ -153,7 +153,7 @@ export const LoginPage = () => {
         <Box w="100%" p={8} borderWidth={1} borderRadius="lg" boxShadow="lg">
           <form onSubmit={handleLogin}>
             <VStack spacing={4}>
-              <FormControl id="username">
+              {/* <FormControl id="username">
                 <FormLabel>Username</FormLabel>
                 <Input
                   type="text"
@@ -162,7 +162,7 @@ export const LoginPage = () => {
                   placeholder="Enter your username"
                   required
                 />
-              </FormControl>
+              </FormControl> */}
 
               <Button
                 type="submit"
