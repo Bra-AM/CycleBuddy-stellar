@@ -66,26 +66,6 @@ import { useAuthStore } from '../../services/auth/authService';
 import { keyframes } from '@emotion/react';
 import { passkeyService } from '../../services/auth/passkeyService';
 import { stellarContractService } from '../../services/stellar/contractService';
-import { 
-  FaHome, 
-  FaBrain, 
-  FaGraduationCap, 
-  FaFlask, 
-  FaLock, 
-  FaCheckCircle, 
-  FaCertificate, 
-  FaMedal, 
-  FaShieldAlt, 
-  FaMoneyBillWave, 
-  FaChartLine,
-  FaUniversity,
-  FaClock,
-  FaExclamationTriangle,
-  FaBell,
-  FaInfoCircle,
-  FaCheck
-} from 'react-icons/fa';
-import { Link } from 'react-router-dom';
 
 // Create a keyframe animation for the gradient
 const animatedGradient = keyframes`
@@ -216,7 +196,6 @@ export const DashboardPage = () => {
   const [currentAction, setCurrentAction] = useState<string | null>(null);
   const [xlmBalance, setXlmBalance] = useState<number | null>(null);
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
-  const [activeTab, setActiveTab] = useState('dashboard');
   
   // Animated card style
   const cardGradient = useColorModeValue(
@@ -1100,7 +1079,12 @@ export const DashboardPage = () => {
                 mt={2}
                 mb={3}
               />
-              <Button sx={animatedGradientStyle} size="sm" width="full">
+              <Button 
+                sx={animatedGradientStyle} 
+                size="sm" 
+                width="full"
+                onClick={onCalendarOpen}
+              >
                 Log Today
               </Button>
             </CardBody>
@@ -1799,11 +1783,11 @@ export const DashboardPage = () => {
       
       {/* Feature Modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          {renderModalContent()}
-        </ModalContent>
+        {renderModalContent()}
       </Modal>
+
+      {/* Add Calendar Modal */}
+      <CalendarModal isOpen={isCalendarOpen} onClose={onCalendarClose} />
     </Container>
   );
 };
