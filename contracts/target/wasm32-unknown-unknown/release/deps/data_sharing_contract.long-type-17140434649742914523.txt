@@ -1,0 +1,1 @@
+core::result::Result<soroban_sdk::Vec<soroban_sdk::BytesN<32>>, soroban_sdk::String>

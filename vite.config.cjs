@@ -14,6 +14,7 @@ module.exports = defineConfig({
       '@services': path.resolve(__dirname, './src/services'),
       '@contracts': path.resolve(__dirname, './src/contracts'),
       '@types': path.resolve(__dirname, './src/types'),
+      '@assets': path.resolve(__dirname, './src/assets'),
     },
   },
   server: {
@@ -43,4 +44,6 @@ module.exports = defineConfig({
       ],
     },
   },
+  // Configure static asset handling
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg'],
 }); 

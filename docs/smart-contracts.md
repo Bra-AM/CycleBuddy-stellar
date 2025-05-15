@@ -376,6 +376,302 @@ pub enum ContractEvent {
 }
 ```
 
+## Advanced Stellar Features
+
+### 1. Path Payments for Donations
+
+The donation system leverages Stellar's path payment feature to allow users to donate to health initiatives in any currency, which is automatically converted to the recipient's preferred currency.
+
+```mermaid
+graph TD
+    A[User with Currency A] --> B[Path Payment Operation]
+    B --> C{Stellar DEX}
+    C --> D[Recipient with Currency B]
+    
+    style A fill:#ff9999
+    style B fill:#99ff99
+    style C fill:#9999ff
+    style D fill:#ffff99
+```
+
+```rust
+#[contract]
+pub struct DonationContract {
+    initiatives: Map<InitiativeId, Initiative>,
+    donations: Map<Address, Vec<Donation>>,
+    total_donated: Map<InitiativeId, Amount>,
+}
+
+#[contractimpl]
+impl DonationContract {
+    pub fn donate_with_path_payment(&self, 
+        from_asset: Asset, 
+        to_asset: Asset,
+        initiative_id: InitiativeId, 
+        amount: Amount
+    ) -> Result<(), Error> {
+        // Create a path payment operation that converts from_asset to to_asset
+        // Record donation details
+        // Update initiative statistics
+    }
+    
+    pub fn get_donation_history(&self, user: Address) -> Vec<Donation> {
+        // Return donation history for user
+    }
+}
+```
+
+### 2. Time-bound Multi-signature Data Sharing
+
+This feature enables secure, time-limited sharing of health data with medical professionals using Stellar's multi-signature capabilities.
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant DC as Data Contract
+    participant MP as Medical Professional
+    participant SC as Stellar Core
+    
+    U->>DC: Create time-bound share
+    DC->>SC: Create multi-sig transaction with time bounds
+    SC-->>DC: Return transaction hash
+    DC-->>U: Sharing link created
+    U->>MP: Share access link
+    MP->>DC: Request data access
+    DC->>SC: Verify signature & time bounds
+    SC-->>DC: Validation result
+    DC-->>MP: Limited-time access granted
+```
+
+```rust
+#[derive(Serialize, Deserialize)]
+pub struct DataShareConfig {
+    recipient: Address,
+    data_ids: Vec<DataId>,
+    start_time: u64,
+    end_time: u64,
+    access_level: AccessLevel,
+}
+
+#[contractimpl]
+impl DataContract {
+    pub fn create_time_bound_share(&mut self, 
+        config: DataShareConfig
+    ) -> Result<String, Error> {
+        // Create multi-signature transaction with time bounds
+        // Store share configuration
+        // Return sharing link/identifier
+    }
+    
+    pub fn access_shared_data(&self, 
+        share_id: String, 
+        signature: Signature
+    ) -> Result<Vec<EncryptedData>, Error> {
+        // Verify time bounds are still valid
+        // Verify signature from authorized recipient
+        // Return requested data if authorized
+    }
+}
+```
+
+### 3. Claimable Balances for Rewards
+
+Implements a reward system using Stellar's claimable balances, providing incentives for consistent tracking and educational achievements.
+
+```mermaid
+graph TD
+    A[User Action] --> B{Achievement Check}
+    B -->|Completed| C[Create Claimable Balance]
+    B -->|Incomplete| D[No Reward]
+    C --> E[User Notification]
+    E --> F[Claim Reward]
+    
+    style A fill:#ff9999
+    style B fill:#99ff99
+    style C fill:#9999ff
+    style D fill:#ffff99
+    style E fill:#ff99ff
+    style F fill:#99ffff
+```
+
+```rust
+#[contract]
+pub struct RewardContract {
+    achievements: Map<AchievementId, Achievement>,
+    user_progress: Map<Address, Map<AchievementId, Progress>>,
+    claimable_rewards: Map<Address, Vec<ClaimableReward>>,
+}
+
+#[contractimpl]
+impl RewardContract {
+    pub fn check_and_create_rewards(&mut self, user: Address) -> Result<Vec<ClaimableReward>, Error> {
+        // Check user progress against achievements
+        // Create claimable balances for completed achievements
+        // Return newly created rewards
+    }
+    
+    pub fn claim_reward(&mut self, reward_id: String) -> Result<(), Error> {
+        // Claim the balance using Stellar's claimable balance feature
+        // Update user's reward status
+    }
+}
+```
+
+### 4. Zero-knowledge Proofs for Private Data Validation
+
+Enables validation of health metrics without revealing sensitive data through zero-knowledge proofs on the Stellar network.
+
+```mermaid
+graph LR
+    A[User Data] --> B[Generate ZK Proof]
+    B --> C[Validator Contract]
+    C --> D{Verify Proof}
+    D -->|Valid| E[Validation Record]
+    D -->|Invalid| F[Rejection]
+    
+    style A fill:#ff9999
+    style B fill:#99ff99
+    style C fill:#9999ff
+    style D fill:#ffff99
+    style E fill:#ff99ff
+    style F fill:#99ffff
+```
+
+```rust
+#[contract]
+pub struct ZKValidationContract {
+    validators: Vec<Address>,
+    validation_records: Map<Address, Vec<ValidationRecord>>,
+    verification_keys: Map<ValidationType, VerificationKey>,
+}
+
+#[contractimpl]
+impl ZKValidationContract {
+    pub fn submit_proof(&mut self, 
+        proof: ZKProof, 
+        public_inputs: Vec<u8>, 
+        validation_type: ValidationType
+    ) -> Result<ValidationId, Error> {
+        // Verify the zero-knowledge proof against public inputs
+        // Store validation record if valid
+        // Return validation ID
+    }
+    
+    pub fn get_validation_status(&self, 
+        validation_id: ValidationId
+    ) -> ValidationStatus {
+        // Return validation status without revealing private data
+    }
+}
+```
+
+### 5. Data Monetization with Revenue Sharing
+
+Allows users to anonymously monetize their aggregated health data with pharmaceutical research, with transparent revenue sharing.
+
+```mermaid
+sequenceDiagram
+    participant U as Users
+    participant DP as Data Pool
+    participant R as Researchers
+    participant RS as Revenue Sharing Contract
+    
+    U->>DP: Contribute anonymized data
+    R->>DP: Purchase data access
+    R->>RS: Payment
+    RS->>U: Distribute revenue shares
+```
+
+```rust
+#[contract]
+pub struct DataMarketplaceContract {
+    data_pools: Map<PoolId, DataPool>,
+    revenue_shares: Map<Address, Amount>,
+    marketplace_fee: u32, // basis points
+}
+
+#[contractimpl]
+impl DataMarketplaceContract {
+    pub fn contribute_data(&mut self, 
+        pool_id: PoolId, 
+        data_hash: String
+    ) -> Result<(), Error> {
+        // Add user's data hash to the pool
+        // Record contribution for revenue sharing
+    }
+    
+    pub fn purchase_data_access(&mut self, 
+        pool_id: PoolId, 
+        amount: Amount
+    ) -> Result<DataAccess, Error> {
+        // Process payment
+        // Calculate revenue shares
+        // Distribute to contributors
+        // Grant access to researcher
+    }
+    
+    pub fn claim_revenue(&mut self) -> Result<(), Error> {
+        // Allow user to claim accumulated revenue shares
+    }
+}
+```
+
+### 6. Turret-based Automated Health Alerts
+
+Deploys Stellar Turrets to monitor health data and trigger automated alerts for concerning patterns without compromising privacy.
+
+```mermaid
+graph TD
+    A[Health Data] --> B[Encrypted Storage]
+    B --> C[Turret]
+    C --> D{Pattern Analysis}
+    D -->|Concerning Pattern| E[Generate Alert]
+    D -->|Normal| F[No Action]
+    E --> G[Notify User]
+    
+    style A fill:#ff9999
+    style B fill:#99ff99
+    style C fill:#9999ff
+    style D fill:#ffff99
+    style E fill:#ff99ff
+    style F fill:#99ffff
+    style G fill:#ffcc99
+```
+
+```rust
+#[contract]
+pub struct HealthAlertContract {
+    alert_configurations: Map<Address, AlertConfig>,
+    turret_endpoints: Vec<String>,
+    alerts: Map<Address, Vec<Alert>>,
+}
+
+#[contractimpl]
+impl HealthAlertContract {
+    pub fn configure_alerts(&mut self, 
+        config: AlertConfig
+    ) -> Result<(), Error> {
+        // Store user's alert preferences
+        // Deploy monitoring function to Turret
+    }
+    
+    pub fn process_health_data(&mut self, 
+        user: Address, 
+        encrypted_data: EncryptedData
+    ) -> Result<Vec<Alert>, Error> {
+        // Send data to Turret for analysis
+        // Generate alerts based on patterns detected
+        // Return new alerts
+    }
+    
+    pub fn get_alerts(&self, 
+        user: Address
+    ) -> Vec<Alert> {
+        // Retrieve alerts for user
+    }
+}
+```
+
 ## Best Practices
 
 1. **Security**
