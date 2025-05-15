@@ -150,7 +150,7 @@ graph TD
     style Better fill:#dfa,stroke:#333,stroke-width:2px
 ```
 
-## 🛠 Technical Stack
+## Technical Stack
 
 - **Blockchain**: Stellar Network
 - **Authentication**: Stellar Passkeys Kit
@@ -204,7 +204,7 @@ flowchart TD
     style D fill:#ddffdd,stroke:#333,stroke-width:2px
 ```
 
-## 🌱 Getting Started
+## Getting Started
 
 ### Prerequisites
 
