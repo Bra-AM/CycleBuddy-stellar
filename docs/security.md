@@ -304,4 +304,54 @@ graph TD
 
 ## Conclusion
 
-Our security model is designed to provide maximum protection while maintaining usability. We continuously monitor, update, and improve our security measures to stay ahead of potential threats and protect our users' sensitive data. 
+Our security model is designed to provide maximum protection while maintaining usability. We continuously monitor, update, and improve our security measures to stay ahead of potential threats and protect our users' sensitive data.
+
+# Security Best Practices
+
+## Handling Credentials
+
+### Google Cloud Service Account
+
+For Google Cloud authentication, we use service account credentials. Follow these guidelines:
+
+1. **Never commit credentials to Git**
+   - Keep all credential files out of version control
+   - Use .gitignore to prevent accidental commits
+   
+2. **Local Development**
+   - Store credentials in `./config/credentials/` directory (gitignored)
+   - Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to your local credential file
+
+3. **Production Deployment**
+   - Use environment variables to inject credentials
+   - For containerized deployments, use secrets management (Kubernetes Secrets, Docker secrets, etc.)
+   - For cloud platforms, use their native secret management:
+     - GCP: Secret Manager
+     - AWS: Secrets Manager
+     - Azure: Key Vault
+
+4. **CI/CD Pipeline**
+   - Use the CI platform's secrets management
+   - Avoid printing or logging credentials in pipeline scripts
+
+### Database Credentials
+
+Similar principles apply to database credentials:
+
+1. Use environment variables for configuration
+2. Never hardcode credentials in application code
+3. Rotate credentials regularly
+
+## Secure Bootstrapping
+
+For initial setup, we provide a secure bootstrapping script:
+
+```bash
+# Download and run the secure bootstrap script
+curl -sSL https://raw.githubusercontent.com/your-org/CycleBuddy-stellar/main/scripts/secure-bootstrap.sh | bash
+```
+
+This script will:
+- Set up proper credential directories with correct permissions
+- Generate template credential files
+- Provide guidance on obtaining and securely storing real credentials

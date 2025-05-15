@@ -49,3 +49,4 @@ ecosystem.config.js
 
 # Google Cloud credentials
 config/google-credentials.json
+config/credential.json
