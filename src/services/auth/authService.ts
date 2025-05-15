@@ -211,7 +211,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
 // Helper to check if user is authenticated
 export const isAuthenticated = (): boolean => {
-  return localStorage.getItem('auth_token') !== null;
+  // DEVELOPMENT MODE: Always return true to bypass authentication
+  return true;
+  // PRODUCTION MODE (uncomment when ready):
+  // return localStorage.getItem('auth_token') !== null;
 };
 
 class AuthService {
