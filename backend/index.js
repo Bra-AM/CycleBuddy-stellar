@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const router = express.Router();
 const setupSecurityRoutes = require('./features/security');
 const setupCycleRoutes = require('./features/cycle');

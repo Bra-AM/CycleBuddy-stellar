@@ -218,6 +218,21 @@ export const DashboardPage = () => {
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   
+  // Task management states
+  const {
+    isOpen: isTaskModalOpen,
+    onOpen: onTaskModalOpen,
+    onClose: onTaskModalClose
+  } = useDisclosure();
+  const [newTaskText, setNewTaskText] = useState('');
+  const [tasks, setTasks] = useState([
+    { id: '1', text: 'Go to the Gym', category: 'A' },
+    { id: '2', text: 'Finish Project Report', category: 'B' },
+    { id: '3', text: 'Call Mom', category: 'C' },
+    { id: '4', text: 'Buy groceries', category: 'D' },
+    { id: '5', text: 'Renew passport', category: 'A' },
+  ]);
+  
   // Animated card style
   const cardGradient = useColorModeValue(
     'linear(to-r, #8A2BE2, #D53F8C)',
@@ -577,6 +592,49 @@ export const DashboardPage = () => {
       setIsAuthenticating(false);
       setCurrentAction(null);
     }
+  };
+
+  // Handle adding a new task
+  const handleAddTask = () => {
+    if (newTaskText.trim() === '') {
+      toast({
+        title: 'Empty task',
+        description: 'Please enter a task description.',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Randomly assign category A, B, C, or D
+    const categories = ['A', 'B', 'C', 'D'];
+    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    
+    const newTask = {
+      id: Date.now().toString(),
+      text: newTaskText.trim(),
+      category: randomCategory
+    };
+    
+    setTasks([...tasks, newTask]);
+    setNewTaskText('');
+    
+    toast({
+      title: 'Task added',
+      description: `Task has been added to category ${randomCategory}`,
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
+  // Group tasks by category
+  const tasksByCategory = {
+    A: tasks.filter(task => task.category === 'A'),
+    B: tasks.filter(task => task.category === 'B'),
+    C: tasks.filter(task => task.category === 'C'),
+    D: tasks.filter(task => task.category === 'D')
   };
 
   // Modal content based on feature type
@@ -1172,7 +1230,201 @@ export const DashboardPage = () => {
             </CardBody>
           </Card>
         </GridItem>
+        <GridItem colSpan={1}>
+          <Card 
+            borderRadius="lg" 
+            boxShadow="md" 
+            height="100%"
+            _hover={{ transform: 'translateY(-5px)', transition: 'transform 0.3s' }}
+          >
+            <CardHeader bgGradient={cardGradient} borderTopRadius="lg">
+              <Heading size="md" color="white">Boost My Productivity</Heading>
+            </CardHeader>
+            <CardBody>
+              <Stat>
+                <StatLabel>Pending Tasks</StatLabel>
+                <Box as="ul" pl={4} style={{ listStyleType: 'disc' }}>
+                  {tasks.slice(0, 2).map(task => (
+                    <StatHelpText as="li" key={task.id}>{task.text}</StatHelpText>
+                  ))}
+                  {tasks.length > 2 && (
+                    <StatHelpText as="li">And {tasks.length - 2} more...</StatHelpText>
+                  )}
+                </Box>
+              </Stat>
+              <Button sx={animatedGradientStyle} size="sm" width="full" onClick={onTaskModalOpen}>
+                See more
+              </Button>
+            </CardBody>
+          </Card>
+        </GridItem>
       </Grid>
+      
+      {/* Task Management Modal */}
+      <Modal isOpen={isTaskModalOpen} onClose={onTaskModalClose} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader bgGradient={cardGradient} bgClip="text">Task Management</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            {/* New Task Input */}
+            <Box mb={6} p={4} borderWidth="1px" borderRadius="md">
+              <FormControl>
+                <FormLabel fontWeight="bold">Add New Task</FormLabel>
+                <HStack>
+                  <Input 
+                    placeholder="Enter task description" 
+                    value={newTaskText}
+                    onChange={(e) => setNewTaskText(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleAddTask();
+                      }
+                    }}
+                  />
+                  <Button 
+                    sx={animatedGradientStyle}
+                    onClick={handleAddTask}
+                  >
+                    Save
+                  </Button>
+                </HStack>
+              </FormControl>
+            </Box>
+            
+            {/* Task Categories Display */}
+            <Text fontWeight="bold" mb={4}>Your Tasks</Text>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              {/* Category A */}
+              <Box borderWidth="1px" borderRadius="md" p={3}>
+                <HStack mb={2}>
+                  <Badge colorScheme="red" fontSize="0.9em" px={2}>A</Badge>
+                  <Text fontWeight="bold">Mestruation</Text>
+                </HStack>
+                <List spacing={2}>
+                  {tasksByCategory.A.length > 0 ? (
+                    tasksByCategory.A.map(task => (
+                      <ListItem key={task.id} p={2} bg="red.50" borderRadius="md">
+                        <Flex justify="space-between">
+                          <Text>{task.text}</Text>
+                          <IconButton
+                            aria-label="Delete task"
+                            icon={<Icon as={FaCheck} />}
+                            size="xs"
+                            colorScheme="red"
+                            variant="ghost"
+                            onClick={() => {
+                              setTasks(tasks.filter(t => t.id !== task.id));
+                            }}
+                          />
+                        </Flex>
+                      </ListItem>
+                    ))
+                  ) : (
+                    <Text fontSize="sm" color="gray.500">No tasks in this category</Text>
+                  )}
+                </List>
+              </Box>
+              
+              {/* Category B */}
+              <Box borderWidth="1px" borderRadius="md" p={3}>
+                <HStack mb={2}>
+                  <Badge colorScheme="yellow" fontSize="0.9em" px={2}>B</Badge>
+                  <Text fontWeight="bold">Follicular</Text>
+                </HStack>
+                <List spacing={2}>
+                  {tasksByCategory.B.length > 0 ? (
+                    tasksByCategory.B.map(task => (
+                      <ListItem key={task.id} p={2} bg="yellow.50" borderRadius="md">
+                        <Flex justify="space-between">
+                          <Text>{task.text}</Text>
+                          <IconButton
+                            aria-label="Delete task"
+                            icon={<Icon as={FaCheck} />}
+                            size="xs"
+                            colorScheme="yellow"
+                            variant="ghost"
+                            onClick={() => {
+                              setTasks(tasks.filter(t => t.id !== task.id));
+                            }}
+                          />
+                        </Flex>
+                      </ListItem>
+                    ))
+                  ) : (
+                    <Text fontSize="sm" color="gray.500">No tasks in this category</Text>
+                  )}
+                </List>
+              </Box>
+              
+              {/* Category C */}
+              <Box borderWidth="1px" borderRadius="md" p={3}>
+                <HStack mb={2}>
+                  <Badge colorScheme="blue" fontSize="0.9em" px={2}>C</Badge>
+                  <Text fontWeight="bold">Ovullation</Text>
+                </HStack>
+                <List spacing={2}>
+                  {tasksByCategory.C.length > 0 ? (
+                    tasksByCategory.C.map(task => (
+                      <ListItem key={task.id} p={2} bg="blue.50" borderRadius="md">
+                        <Flex justify="space-between">
+                          <Text>{task.text}</Text>
+                          <IconButton
+                            aria-label="Delete task"
+                            icon={<Icon as={FaCheck} />}
+                            size="xs"
+                            colorScheme="blue"
+                            variant="ghost"
+                            onClick={() => {
+                              setTasks(tasks.filter(t => t.id !== task.id));
+                            }}
+                          />
+                        </Flex>
+                      </ListItem>
+                    ))
+                  ) : (
+                    <Text fontSize="sm" color="gray.500">No tasks in this category</Text>
+                  )}
+                </List>
+              </Box>
+              
+              {/* Category D */}
+              <Box borderWidth="1px" borderRadius="md" p={3}>
+                <HStack mb={2}>
+                  <Badge colorScheme="green" fontSize="0.9em" px={2}>D</Badge>
+                  <Text fontWeight="bold">Luteal</Text>
+                </HStack>
+                <List spacing={2}>
+                  {tasksByCategory.D.length > 0 ? (
+                    tasksByCategory.D.map(task => (
+                      <ListItem key={task.id} p={2} bg="green.50" borderRadius="md">
+                        <Flex justify="space-between">
+                          <Text>{task.text}</Text>
+                          <IconButton
+                            aria-label="Delete task"
+                            icon={<Icon as={FaCheck} />}
+                            size="xs"
+                            colorScheme="green"
+                            variant="ghost"
+                            onClick={() => {
+                              setTasks(tasks.filter(t => t.id !== task.id));
+                            }}
+                          />
+                        </Flex>
+                      </ListItem>
+                    ))
+                  ) : (
+                    <Text fontSize="sm" color="gray.500">No tasks in this category</Text>
+                  )}
+                </List>
+              </Box>
+            </SimpleGrid>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onTaskModalClose}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       
       {/* <Box mb={10}>
         <Heading as="h2" size="lg" mb={4} bgGradient={cardGradient} bgClip="text">

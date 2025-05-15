@@ -14,6 +14,7 @@ import TestContract from './pages/TestContract';
 import { VerifyContracts } from './pages/VerifyContracts';
 import DeployAndInitialize from './pages/DeployAndInitialize';
 import DonationPage from './pages/features/DonationPage';
+import ProductivityPage from './pages/features/ProductivityPage';
 import RewardsPage from './pages/features/RewardsPage';
 import DataSharingPage from './pages/features/DataSharingPage';
 import AIHealthInsightsPage from './pages/features/AIHealthInsightsPage';
