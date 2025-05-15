@@ -55,3 +55,6 @@ yarn-error.log*
 *.tmp
 *.temp
 .DS_Store 
+
+backend/.env
+backend/credential.json
