@@ -1203,40 +1203,6 @@ export const DashboardPage = () => {
             _hover={{ transform: 'translateY(-5px)', transition: 'transform 0.3s' }}
           >
             <CardHeader bgGradient={cardGradient} borderTopRadius="lg">
-              <Heading size="md" color="white">Mood Tracker</Heading>
-            </CardHeader>
-            <CardBody>
-              <VStack align="start" spacing={3}>
-                {cycleData.map((day, index) => (
-                  <HStack key={index} w="100%" justifyContent="space-between">
-                    <Text fontWeight="semibold">Day {day.day}:</Text>
-                    <Badge colorScheme={
-                      day.mood === 'Great' ? 'green' : 
-                      day.mood === 'Good' ? 'blue' : 
-                      day.mood === 'Fair' ? 'yellow' : 'red'
-                    }>
-                      {day.mood}
-                    </Badge>
-                  </HStack>
-                ))}
-              </VStack>
-            </CardBody>
-            <CardFooter pt={0}>
-              <Text fontSize="sm" color="gray.500">
-                Your mood data is securely encrypted
-              </Text>
-            </CardFooter>
-          </Card>
-        </GridItem>
-
-        <GridItem colSpan={1}>
-          <Card 
-            borderRadius="lg" 
-            boxShadow="md" 
-            height="100%"
-            _hover={{ transform: 'translateY(-5px)', transition: 'transform 0.3s' }}
-          >
-            <CardHeader bgGradient={cardGradient} borderTopRadius="lg">
               <Heading size="md" color="white">Symptoms</Heading>
             </CardHeader>
             <CardBody>
@@ -1260,6 +1226,7 @@ export const DashboardPage = () => {
             </CardBody>
           </Card>
         </GridItem>
+        
         <GridItem colSpan={1}>
           <Card 
             borderRadius="lg" 
@@ -1557,43 +1524,6 @@ export const DashboardPage = () => {
       </Modal>
 
       {/* Breakthrough Features Section */}
-      <Box mb={8}>
-        <Heading size="lg" mb={4}>Breakthrough Features</Heading>
-        <Text mb={6}>
-          Explore our innovative features that leverage the full power of Web3 and the Stellar blockchain to transform menstrual health tracking.
-        </Text>
-        
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-          {breakthroughFeatures.map((feature, index) => (
-            <Card 
-              key={index} 
-              boxShadow="md" 
-              borderRadius="xl" 
-              overflow="hidden"
-              height="100%"
-              transition="transform 0.2s"
-              _hover={{ transform: 'translateY(-5px)' }}
-            >
-              <Box bg={`${feature.color}.500`} py={2} px={4}>
-                <Text color="white" fontSize="4xl" textAlign="center">{feature.emoji}</Text>
-              </Box>
-              <CardBody>
-                <Heading size="md" mb={2}>{feature.title}</Heading>
-                <Text mb={4}>{feature.description}</Text>
-              </CardBody>
-              <CardFooter pt={0}>
-                <Button 
-                  colorScheme={feature.color}
-                  width="100%"
-                  onClick={() => setActiveTab(feature.tabValue as TabType)}
-                >
-                  Explore Feature
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </SimpleGrid>
-      </Box>
       </>
       )}
 
