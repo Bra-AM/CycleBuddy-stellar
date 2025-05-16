@@ -167,7 +167,7 @@ graph TD
     style Rewards fill:#fad,stroke:#333,stroke-width:2px
 ```
 
-## 🛠 Technical Stack
+## Technical Stack
 
 - **Blockchains**: 
   - Stellar Network: Core application functionality
@@ -229,7 +229,7 @@ flowchart TD
     style E fill:#ddffdd,stroke:#333,stroke-width:2px
 ```
 
-## 🌱 Getting Started
+## Getting Started
 
 ### Prerequisites
 
