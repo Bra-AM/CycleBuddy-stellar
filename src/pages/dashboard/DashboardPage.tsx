@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -39,11 +39,7 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Image,
-  Stack,
   Modal,
-  ModalOverlay,
-  ModalContent,
   ModalHeader,
   ModalFooter,
   ModalBody,
@@ -52,7 +48,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Textarea,
   Select,
   Checkbox,
   Alert,
@@ -60,12 +55,18 @@ import {
   AlertDescription,
   Spinner,
   Icon,
-  Link as ChakraLink,
 } from '@chakra-ui/react';
 import { useAuthStore } from '../../services/auth/authService';
 import { keyframes } from '@emotion/react';
 import { passkeyService } from '../../services/auth/passkeyService';
 import { stellarContractService } from '../../services/stellar/contractService';
+import { 
+  FaHome, FaBrain, FaGraduationCap, FaLock, FaCheckCircle,
+  FaInfoCircle, FaExclamationTriangle, FaBell, FaCertificate,
+  FaMedal, FaShieldAlt, FaMoneyBillWave, FaFlask, FaUniversity,
+  FaClock, FaChartLine, FaCheck 
+} from 'react-icons/fa';
+import CalendarModal from '../../components/calendar/CalendarModal';
 
 // Create a keyframe animation for the gradient
 const animatedGradient = keyframes`
@@ -79,44 +80,6 @@ const recentCycleData = [
   { day: 1, mood: 'Good', symptoms: ['Cramps', 'Fatigue'], date: '2025-09-01' },
   { day: 2, mood: 'Fair', symptoms: ['Bloating'], date: '2025-09-02' },
   { day: 3, mood: 'Great', symptoms: [], date: '2025-09-03' },
-];
-
-// Information cards data
-const infoCards = [
-  {
-    title: 'Cycle Health Tips',
-    content: 'Regular exercise can help reduce menstrual pain and improve mood.',
-    emoji: '📈',
-  },
-  {
-    title: 'Did You Know?',
-    content: 'The average menstrual cycle is 28 days, but anywhere from 21 to 35 days is considered normal.',
-    emoji: '📅',
-  },
-  {
-    title: 'Community Highlight',
-    content: 'Join our discussion on natural remedies for menstrual discomfort.',
-    emoji: '👥',
-  },
-];
-
-// Stellar blockchain features
-const blockchainFeatures = [
-  { 
-    title: 'Passkey Authentication',
-    description: 'Your account is secured with Stellar Passkeys, a modern authentication method more secure than passwords.',
-    emoji: '🔒'
-  },
-  { 
-    title: 'Encrypted Data Storage',
-    description: 'Your health data is encrypted and stored on the Stellar blockchain for maximum privacy and security.',
-    emoji: '🔐'
-  },
-  { 
-    title: 'Decentralized Identity',
-    description: 'Your identity is protected through Stellar\'s decentralized authentication, giving you full control.',
-    emoji: '🛡️'
-  },
 ];
 
 // Advanced Stellar features
@@ -165,24 +128,26 @@ const breakthroughFeatures = [
     title: 'NFT-Based Educational Achievement',
     description: 'Earn verified NFT credentials by completing educational modules on menstrual and reproductive health.',
     emoji: '🎓',
-    tabValue: 'nft-education',
+    tabValue: 'nft-education' as TabType,
     color: 'teal',
   },
   {
     title: 'AI-Powered Health Insights',
     description: 'Get personalized health insights from advanced machine learning algorithms that analyze your encrypted data while maintaining privacy.',
     emoji: '🧠',
-    tabValue: 'ai-health-insights',
+    tabValue: 'ai-health-insights' as TabType,
     color: 'purple',
   },
   /* {
     title: 'Research Contribution Marketplace',
     description: 'Contribute anonymized health data to research projects of your choice and receive fair compensation.',
     emoji: '🔬',
-    tabValue: 'research-marketplace',
+    tabValue: 'research-marketplace' as TabType,
     color: 'blue',
   }, */
 ];
+
+type TabType = 'dashboard' | 'ai-health-insights' | 'nft-education' | 'research-marketplace';
 
 export const DashboardPage = () => {
   const { user, logout } = useAuthStore();
@@ -196,6 +161,8 @@ export const DashboardPage = () => {
   const [currentAction, setCurrentAction] = useState<string | null>(null);
   const [xlmBalance, setXlmBalance] = useState<number | null>(null);
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
+  const [activeTab, setActiveTab] = useState<TabType>('dashboard');
+  const { isOpen: isCalendarOpen, onOpen: onCalendarOpen, onClose: onCalendarClose } = useDisclosure();
   
   // Task management states
   const {
@@ -1507,10 +1474,7 @@ export const DashboardPage = () => {
       
       {/* Feature Modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          {renderModalContent()}
-        </ModalContent>
+        {renderModalContent()}
       </Modal>
 
       {/* Breakthrough Features Section */}
@@ -1542,7 +1506,7 @@ export const DashboardPage = () => {
                 <Button 
                   colorScheme={feature.color}
                   width="100%"
-                  onClick={() => setActiveTab(feature.tabValue)}
+                  onClick={() => setActiveTab(feature.tabValue as TabType)}
                 >
                   Explore Feature
                 </Button>
@@ -2020,8 +1984,7 @@ export const DashboardPage = () => {
               </VStack>
             </CardHeader>
             <CardBody pt={0} display="flex" justifyContent="center">
-{/*               <Text mb={4}>{feature.description}</Text>
- */}              <Button 
+              <Button 
                 size="sm" 
                 onClick={() => openFeatureModal(feature)}
                 sx={animatedGradientStyle}

@@ -14,43 +14,52 @@
   line-height: 1.125em;
 }
 
+/* Override ALL default calendar styles */
 .custom-calendar .react-calendar__tile {
   padding: 1em 0.5em;
+  position: relative;
+  background: none;
+}
+
+.custom-calendar .react-calendar__tile--active,
+.custom-calendar .react-calendar__tile--active:enabled:hover,
+.custom-calendar .react-calendar__tile--active:enabled:focus,
+.custom-calendar .react-calendar__tile--active:hover,
+.custom-calendar .react-calendar__tile--active:focus,
+.custom-calendar button.react-calendar__tile--hasActive,
+.custom-calendar .react-calendar__tile.react-calendar__tile--active {
+  background: none !important;
+  color: inherit !important;
 }
 
 /* Selected date style */
-.custom-calendar .selected-date {
-  background: #D53F8C !important;
+.custom-calendar .selected-date,
+.custom-calendar .selected-date:enabled:hover,
+.custom-calendar .selected-date:enabled:focus,
+.custom-calendar .selected-date:hover,
+.custom-calendar .selected-date:focus {
+  background: #E53E3E !important;
   color: white !important;
+  font-weight: bold !important;
 }
 
-.custom-calendar .react-calendar__tile--active {
-  background: #D53F8C !important;
-  color: white;
-}
-
+/* Today's date style */
 .custom-calendar .react-calendar__tile--now {
-  background: #8A2BE2;
-  color: white;
+  background: #EDF2F7 !important;
+  color: black !important;
 }
 
+/* Hover effect for non-selected dates */
 .custom-calendar .react-calendar__tile:enabled:hover,
 .custom-calendar .react-calendar__tile:enabled:focus {
-  background-color: #e6e6e6;
-}
-
-/* Override hover effect for selected dates */
-.custom-calendar .selected-date:enabled:hover,
-.custom-calendar .selected-date:enabled:focus {
-  background: #D53F8C !important;
-  opacity: 0.9;
+  background-color: #EDF2F7 !important;
 }
 
 .custom-calendar .react-calendar__tile--hasActive {
-  background: #D53F8C;
+  background: #E53E3E;
 }
 
 .custom-calendar .react-calendar__tile--hasActive:enabled:hover,
 .custom-calendar .react-calendar__tile--hasActive:enabled:focus {
-  background: #D53F8C;
+  background: #E53E3E;
 } 
