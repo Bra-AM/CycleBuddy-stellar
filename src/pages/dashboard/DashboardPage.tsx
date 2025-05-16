@@ -75,7 +75,7 @@ interface CreateTaskResponse {
   task?: {
     id: number;
     description: string;
-    createdAt: string;
+    //createdAt: string;
     category_id: number;
     // Add other task properties as needed
   };
@@ -621,6 +621,7 @@ export const DashboardPage = () => {
         category_id: data.task.category_id,
       };
        */
+      console.log('Task created:', data.task);
       setTasks([...tasks, data.task]);
       setNewTaskText('');
       
