@@ -40,6 +40,8 @@ import {
   Tab,
   TabPanel,
   Modal,
+  ModalOverlay,
+  ModalContent,
   ModalHeader,
   ModalFooter,
   ModalBody,
