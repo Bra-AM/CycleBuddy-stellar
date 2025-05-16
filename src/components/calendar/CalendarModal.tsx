@@ -19,6 +19,7 @@ import {
   Stack,
   ButtonGroup,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
 import 'react-calendar/dist/Calendar.css';
 import './styles/calendar.css';
@@ -37,6 +38,12 @@ interface DayData {
   moodType?: 'fair' | 'good' | 'great';
 }
 
+interface CycleData {
+  userId: string; // This would come from auth context in a real app
+  date: string;
+  data: DayData;
+}
+
 type CalendarData = {
   [date: string]: DayData;
 };
@@ -47,6 +54,8 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
     const savedData = localStorage.getItem('calendarData');
     return savedData ? JSON.parse(savedData) : {};
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const toast = useToast();
 
   const cardGradient = useColorModeValue(
     'linear(to-r, #8A2BE2, #D53F8C)',
@@ -217,6 +226,62 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
     );
   };
 
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      
+      // Prepare data for API
+      const cycleDataArray: CycleData[] = Object.entries(calendarData).map(([date, data]) => ({
+        userId: "user123", // This would come from auth context
+        date,
+        data
+      }));
+
+      // Save to a JSON file
+      const blob = new Blob([JSON.stringify(cycleDataArray, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'cycle_data.json';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      // Example of how the API call would look
+      // try {
+      //   const response = await fetch('http://localhost:3000/api/cycle', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify(cycleDataArray),
+      //   });
+      //   if (!response.ok) throw new Error('Failed to save data');
+      // } catch (error) {
+      //   throw new Error('Failed to connect to the server');
+      // }
+
+      toast({
+        title: "Data saved successfully",
+        description: "Your cycle data has been exported to JSON",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error saving data",
+        description: error instanceof Error ? error.message : "An unknown error occurred",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
@@ -338,7 +403,12 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
               >
                 Clear
               </Button>
-              <Button colorScheme="purple">
+              <Button 
+                colorScheme="purple"
+                onClick={handleSave}
+                isLoading={isSaving}
+                loadingText="Saving..."
+              >
                 Save
               </Button>
             </ButtonGroup>
