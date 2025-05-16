@@ -33,7 +33,7 @@ const animatedGradient = keyframes`
 `;
 
 export const LoginPage = () => {
-  const [username, setUsername] = useState('');
+  //const [username, setUsername] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [longOperation, setLongOperation] = useState(false);
   const { login, error } = useAuthStore();
@@ -97,6 +97,32 @@ export const LoginPage = () => {
       console.log('Login process completed with result:', success);
       
       if (success) {
+
+        const body = {
+          username: 'evega2',
+          password: 'hola', // Placeholder, as we are not using a password
+        }
+        
+        const response = await fetch('http://localhost:4000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        });
+      
+       const data = await response.json();
+
+       console.log(data);
+      
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create task');
+        }
+
+        // Assuming the login was successful and you have a token
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
         toast({
           title: 'Login successful',
           description: 'Welcome back to CycleBuddy!',

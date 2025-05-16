@@ -69,6 +69,7 @@ import {
   FaClock, FaChartLine, FaCheck 
 } from 'react-icons/fa';
 import CalendarModal from '../../components/calendar/CalendarModal';
+import { c } from 'vitest/dist/reporters-5f784f42.js';
 
 interface CreateTaskResponse {
   success: boolean;
@@ -194,13 +195,12 @@ export const DashboardPage = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInVzZXJuYW1lIjoiZXZlZ2EyIiwiZW1haWwiOiJ0ZXN0MkBnbWFpbC5jb20iLCJpYXQiOjE3NDczNzA3MjEsImV4cCI6MTc0NzQ1NzEyMX0.ABmicfT5jg65l4Ki5ZbcPUB6vEnY5i_V9EEQHqAKqK8';
-        
+
         const response = await fetch('http://localhost:4000/api/productivity', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
 
@@ -595,16 +595,11 @@ export const DashboardPage = () => {
 
   const createTask = async (description: string): Promise<CreateTaskResponse> => {
     try {
-
-      //Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInVzZXJuYW1lIjoiZXZlZ2EyIiwiZW1haWwiOiJ0ZXN0MkBnbWFpbC5jb20iLCJpYXQiOjE3NDczNzA3MjEsImV4cCI6MTc0NzQ1NzEyMX0.ABmicfT5jg65l4Ki5ZbcPUB6vEnY5i_V9EEQHqAKqK8
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInVzZXJuYW1lIjoiZXZlZ2EyIiwiZW1haWwiOiJ0ZXN0MkBnbWFpbC5jb20iLCJpYXQiOjE3NDczNzA3MjEsImV4cCI6MTc0NzQ1NzEyMX0.ABmicfT5jg65l4Ki5ZbcPUB6vEnY5i_V9EEQHqAKqK8';
-
-
       const response = await fetch('http://localhost:4000/api/task', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({ description }),
       });
