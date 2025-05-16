@@ -152,14 +152,14 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
     const data = calendarData[dateStr];
     
     if (data?.flow) {
-      const baseSize = 8; // Base size in pixels
+      const baseSize = 12; // Increased from 8 to 12 for light flow
       let size = baseSize;
       
       // Adjust size based on flow level
       if (data.flowLevel === 'regular') {
-        size = baseSize * 3; // Triple size for regular
+        size = baseSize * 3; // Triple size for regular (36px)
       } else if (data.flowLevel === 'heavy') {
-        size = baseSize * 6; // 6x size for heavy
+        size = baseSize * 6; // 6x size for heavy (72px)
       }
       
       return (
@@ -210,6 +210,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
             onClick={() => handleCrampsLevelChange((index + 1).toString())}
             _hover={{ opacity: 0.8 }}
             borderRadius="4px"
+            border="1px solid black"
           />
         ))}
       </HStack>
@@ -225,6 +226,24 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
         <ModalBody pb={6}>
           <Flex>
             <Box flex="1" className="calendar-container">
+              <style>
+                {`
+                  .react-calendar__tile {
+                    border: 1px solid #CBD5E0;
+                    border-radius: 4px;
+                    margin: 1px;
+                    padding: 8px 4px;
+                  }
+                  .react-calendar__month-view__days__day--weekend {
+                    border: 1px solid #CBD5E0;
+                  }
+                  .react-calendar__tile:enabled:hover,
+                  .react-calendar__tile:enabled:focus,
+                  .react-calendar__tile--active {
+                    border: 1px solid #4A5568;
+                  }
+                `}
+              </style>
               <Calendar
                 className="custom-calendar"
                 onClickDay={handleDateClick}
