@@ -9,6 +9,7 @@
 [![Hackathon Project](https://img.shields.io/badge/EasyA-Consensus%20Hackathon-blue)](https://easya.io)
 
 > "Know your body, Own your cycle" - A Web3-powered menstrual health companion that puts privacy and education first.
+> https://bradyalimedi.wixsite.com/cyclebuddy-app
 
 ## Vision
 
