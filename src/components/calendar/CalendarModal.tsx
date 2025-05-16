@@ -184,17 +184,32 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
     const dateStr = selectedDate?.toISOString().split('T')[0] || '';
     const currentLevel = calendarData[dateStr]?.crampsLevel || 0;
 
+    // Array of red shades from light pink to intense red
+    const redShades = [
+      '#FFF5F5', // red.50
+      '#FED7D7', // red.100
+      '#FEB2B2', // red.200
+      '#FC8181', // red.300
+      '#F56565', // red.400
+      '#E53E3E', // red.500
+      '#C53030', // red.600
+      '#9B2C2C', // red.700
+      '#822727', // red.800
+      '#63171B', // red.900
+    ];
+
     return (
       <HStack spacing={1} mt={2}>
         {[...Array(10)].map((_, index) => (
           <Box
             key={index}
-            w="20px"
-            h="20px"
-            bg={index < currentLevel ? "red.500" : "gray.200"}
+            w="24px"
+            h="12px"
+            bg={index < currentLevel ? redShades[index] : "gray.200"}
             cursor="pointer"
             onClick={() => handleCrampsLevelChange((index + 1).toString())}
             _hover={{ opacity: 0.8 }}
+            borderRadius="4px"
           />
         ))}
       </HStack>
@@ -204,7 +219,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
-      <ModalContent maxW="900px" bg="pink.50">
+      <ModalContent maxW="900px" bg="purple.50">
         <ModalHeader textAlign="center" bgGradient={cardGradient} bgClip="text">Track Your Cycle</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
@@ -261,7 +276,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
                     </Checkbox>
                     {calendarData[selectedDate.toISOString().split('T')[0]]?.cramps && (
                       <Box ml={6}>
-                        <Text fontSize="sm" mb={1}>Pain Level (1-10):</Text>
+                        <Text fontSize="sm" mb={1}>Pain Level:</Text>
                         {renderPainScale()}
                       </Box>
                     )}
