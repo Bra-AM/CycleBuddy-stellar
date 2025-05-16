@@ -14,6 +14,7 @@
     "@simplewebauthn/server": "^13.1.1",
     "@stellar/stellar-sdk": "^13.3.0",
     "base64url": "^3.0.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

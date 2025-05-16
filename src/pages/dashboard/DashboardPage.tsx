@@ -70,6 +70,18 @@ import {
 } from 'react-icons/fa';
 import CalendarModal from '../../components/calendar/CalendarModal';
 
+interface CreateTaskResponse {
+  success: boolean;
+  task?: {
+    id: number;
+    description: string;
+    createdAt: string;
+    category_id: number;
+    // Add other task properties as needed
+  };
+  error?: string;
+}
+
 // Create a keyframe animation for the gradient
 const animatedGradient = keyframes`
   0% { background-position: 0% 50%; }
@@ -173,14 +185,53 @@ export const DashboardPage = () => {
     onClose: onTaskModalClose
   } = useDisclosure();
   const [newTaskText, setNewTaskText] = useState('');
-  const [tasks, setTasks] = useState([
-    { id: '1', text: 'Go to the Gym', category: 'A' },
-    { id: '2', text: 'Finish Project Report', category: 'B' },
-    { id: '3', text: 'Call Mom', category: 'C' },
-    { id: '4', text: 'Buy groceries', category: 'D' },
-    { id: '5', text: 'Renew passport', category: 'A' },
-  ]);
-  
+
+  //Call APi to retrieve tasks
+  // Mock task data
+  // In a real application, you would fetch this data from an API
+  const [tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInVzZXJuYW1lIjoiZXZlZ2EyIiwiZW1haWwiOiJ0ZXN0MkBnbWFpbC5jb20iLCJpYXQiOjE3NDczNzA3MjEsImV4cCI6MTc0NzQ1NzEyMX0.ABmicfT5jg65l4Ki5ZbcPUB6vEnY5i_V9EEQHqAKqK8';
+        
+        const response = await fetch('http://localhost:4000/api/productivity', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorBody = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorBody}`);
+        }
+
+        const data = await response.json();
+        console.log('Tasks:', data);
+        setTasks(data);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
+
+  /* const [tasks, setTasks] = useState([
+    { id: '1', text: 'Go to the Gym', category: '1' },
+    { id: '2', text: 'Finish Project Report', category: '2' },
+    { id: '3', text: 'Call Mom', category: '3' },
+    { id: '4', text: 'Buy groceries', category: '3' },
+    { id: '5', text: 'Renew passport', category: '2' },
+  ]); */
+
+
+
+
   // Animated card style
   const cardGradient = useColorModeValue(
     'linear(to-r, #8A2BE2, #D53F8C)',
@@ -542,9 +593,56 @@ export const DashboardPage = () => {
     }
   };
 
+  const createTask = async (description: string): Promise<CreateTaskResponse> => {
+    try {
+
+      //Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInVzZXJuYW1lIjoiZXZlZ2EyIiwiZW1haWwiOiJ0ZXN0MkBnbWFpbC5jb20iLCJpYXQiOjE3NDczNzA3MjEsImV4cCI6MTc0NzQ1NzEyMX0.ABmicfT5jg65l4Ki5ZbcPUB6vEnY5i_V9EEQHqAKqK8
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInVzZXJuYW1lIjoiZXZlZ2EyIiwiZW1haWwiOiJ0ZXN0MkBnbWFpbC5jb20iLCJpYXQiOjE3NDczNzA3MjEsImV4cCI6MTc0NzQ1NzEyMX0.ABmicfT5jg65l4Ki5ZbcPUB6vEnY5i_V9EEQHqAKqK8';
+
+
+      const response = await fetch('http://localhost:4000/api/task', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ description }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create task');
+      }
+      
+      /* const newTask = {
+        id: data.task.id,
+        description: data.task.description,
+        category_id: data.task.category_id,
+      };
+       */
+      setTasks([...tasks, data.task]);
+      setNewTaskText('');
+      
+      toast({
+        title: 'Task added',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+
+
+      return data;
+    } catch (error) {
+      console.error('Error creating task:', error);
+      throw error;
+    }
+  };
+
   // Handle adding a new task
   const handleAddTask = () => {
     if (newTaskText.trim() === '') {
+
       toast({
         title: 'Empty task',
         description: 'Please enter a task description.',
@@ -555,34 +653,17 @@ export const DashboardPage = () => {
       return;
     }
 
-    // Randomly assign category A, B, C, or D
-    const categories = ['A', 'B', 'C', 'D'];
-    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-    
-    const newTask = {
-      id: Date.now().toString(),
-      text: newTaskText.trim(),
-      category: randomCategory
-    };
-    
-    setTasks([...tasks, newTask]);
-    setNewTaskText('');
-    
-    toast({
-      title: 'Task added',
-      description: `Task has been added to category ${randomCategory}`,
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
+    //call createTask
+    var response = createTask(newTaskText);
+
   };
 
   // Group tasks by category
   const tasksByCategory = {
-    A: tasks.filter(task => task.category === 'A'),
-    B: tasks.filter(task => task.category === 'B'),
-    C: tasks.filter(task => task.category === 'C'),
-    D: tasks.filter(task => task.category === 'D')
+    A: tasks.filter(task => task.category_id === 1),
+    B: tasks.filter(task => task.category_id === 2),
+    C: tasks.filter(task => task.category_id === 3),
+    D: tasks.filter(task => task.category_id === 4)
   };
 
   // Modal content based on feature type
@@ -1198,7 +1279,7 @@ export const DashboardPage = () => {
                 <StatLabel>Pending Tasks</StatLabel>
                 <Box as="ul" pl={4} style={{ listStyleType: 'disc' }}>
                   {tasks.slice(0, 2).map(task => (
-                    <StatHelpText as="li" key={task.id}>{task.text}</StatHelpText>
+                    <StatHelpText as="li" key={task.id}>{task.description}</StatHelpText>
                   ))}
                   {tasks.length > 2 && (
                     <StatHelpText as="li">And {tasks.length - 2} more...</StatHelpText>
@@ -1259,7 +1340,7 @@ export const DashboardPage = () => {
                     tasksByCategory.A.map(task => (
                       <ListItem key={task.id} p={2} bg="red.50" borderRadius="md">
                         <Flex justify="space-between">
-                          <Text>{task.text}</Text>
+                          <Text>{task.description}</Text>
                           <IconButton
                             aria-label="Delete task"
                             icon={<Icon as={FaCheck} />}
@@ -1267,7 +1348,7 @@ export const DashboardPage = () => {
                             colorScheme="red"
                             variant="ghost"
                             onClick={() => {
-                              setTasks(tasks.filter(t => t.id !== task.id));
+                              setTasks(tasks.filter(t => t.id != task.id));
                             }}
                           />
                         </Flex>
@@ -1286,11 +1367,11 @@ export const DashboardPage = () => {
                   <Text fontWeight="bold">Follicular</Text>
                 </HStack>
                 <List spacing={2}>
-                  {tasksByCategory.B.length > 0 ? (
+                  {tasksByCategory.A.length > 0 ? (
                     tasksByCategory.B.map(task => (
                       <ListItem key={task.id} p={2} bg="yellow.50" borderRadius="md">
                         <Flex justify="space-between">
-                          <Text>{task.text}</Text>
+                          <Text>{task.description}</Text>
                           <IconButton
                             aria-label="Delete task"
                             icon={<Icon as={FaCheck} />}
@@ -1298,7 +1379,7 @@ export const DashboardPage = () => {
                             colorScheme="yellow"
                             variant="ghost"
                             onClick={() => {
-                              setTasks(tasks.filter(t => t.id !== task.id));
+                              setTasks(tasks.filter(t => t.id != task.id));
                             }}
                           />
                         </Flex>
@@ -1321,7 +1402,7 @@ export const DashboardPage = () => {
                     tasksByCategory.C.map(task => (
                       <ListItem key={task.id} p={2} bg="blue.50" borderRadius="md">
                         <Flex justify="space-between">
-                          <Text>{task.text}</Text>
+                          <Text>{task.description}</Text>
                           <IconButton
                             aria-label="Delete task"
                             icon={<Icon as={FaCheck} />}
@@ -1329,7 +1410,7 @@ export const DashboardPage = () => {
                             colorScheme="blue"
                             variant="ghost"
                             onClick={() => {
-                              setTasks(tasks.filter(t => t.id !== task.id));
+                              setTasks(tasks.filter(t => t.id != task.id));
                             }}
                           />
                         </Flex>
@@ -1352,7 +1433,7 @@ export const DashboardPage = () => {
                     tasksByCategory.D.map(task => (
                       <ListItem key={task.id} p={2} bg="green.50" borderRadius="md">
                         <Flex justify="space-between">
-                          <Text>{task.text}</Text>
+                          <Text>{task.description}</Text>
                           <IconButton
                             aria-label="Delete task"
                             icon={<Icon as={FaCheck} />}
@@ -1360,7 +1441,7 @@ export const DashboardPage = () => {
                             colorScheme="green"
                             variant="ghost"
                             onClick={() => {
-                              setTasks(tasks.filter(t => t.id !== task.id));
+                              setTasks(tasks.filter(t => t.id != task.id));
                             }}
                           />
                         </Flex>

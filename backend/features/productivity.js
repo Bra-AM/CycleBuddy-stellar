@@ -37,7 +37,19 @@ function setupProductivityRoutes(pool) {
                 [user_id, description || null, category || null, user_id, user_id]
             );
 
-            res.status(200).json({ id: result.insertId, message: 'Task created' });
+            // convert category to int
+            const categoryId = parseInt(category, 10);
+
+            task = {
+                id: result.insertId,
+                user_id: user_id,
+                description: description || null,
+                category_id: categoryId || null,
+                created_by: user_id,
+                updated_by: user_id
+            };
+
+            res.status(200).json({ task: task, message: 'Task created'  });
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
                 return res.status(409).json({ error: 'Task already exists' });
@@ -77,7 +89,7 @@ function setupProductivityRoutes(pool) {
                 groupedTasks[task.category_id].push(task);
             });
             
-            res.status(200).json(groupedTasks);
+            res.status(200).json(result);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
