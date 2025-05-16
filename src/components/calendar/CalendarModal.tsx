@@ -18,6 +18,7 @@ import {
   RadioGroup,
   Stack,
   ButtonGroup,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import 'react-calendar/dist/Calendar.css';
 import './styles/calendar.css';
@@ -46,6 +47,11 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
     const savedData = localStorage.getItem('calendarData');
     return savedData ? JSON.parse(savedData) : {};
   });
+
+  const cardGradient = useColorModeValue(
+    'linear(to-r, #8A2BE2, #D53F8C)',
+    'linear(to-r, #8A2BE2, #D53F8C)'
+  );
 
   // Save data to localStorage whenever it changes
   useEffect(() => {
@@ -161,12 +167,13 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
           width={`${size}px`}
           height={`${size}px`}
           borderRadius="50%"
-          bg="red.500"
+          bg="rgba(229, 62, 62, 0.4)"
           position="absolute"
           bottom="4px"
           left="50%"
           transform="translateX(-50%)"
           transition="all 0.2s ease-in-out"
+          zIndex="1"
         />
       );
     }
@@ -197,8 +204,8 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose })
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
-      <ModalContent maxW="900px">
-        <ModalHeader>Track Your Cycle</ModalHeader>
+      <ModalContent maxW="900px" bg="pink.50">
+        <ModalHeader textAlign="center" bgGradient={cardGradient} bgClip="text">Track Your Cycle</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
           <Flex>
